@@ -1,3 +1,5 @@
+<img width="128" height="128" alt="icon-128" src="https://github.com/user-attachments/assets/f01fe201-63c0-4559-abfc-1f2643afa6f4" />
+
 # CDoc Pseudocode Syntax
 
 C syntax highlighting for `.cdoc` files designed for reverse engineering workflows. Write C-style pseudocode without error analysis, IntelliSense interference, or compiler warnings.
