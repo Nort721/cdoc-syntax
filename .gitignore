@@ -1,0 +1,29 @@
+# VSCode Extension
+*.vsix
+.vscode-test/
+out/
+
+# Node modules (if you ever add dependencies)
+node_modules/
+
+# OS specific
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Editor temp files
+*.swp
+*.swo
+*~
+.idea/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Temporary files
+*.tmp
+*.temp
+.cache/

@@ -1,0 +1,157 @@
+{
+    "Function Skeleton": {
+        "prefix": "func",
+        "body": [
+            "${1:NTSTATUS} ${2:__fastcall} ${3:sub_140001000}(${4:PVOID param1}) {",
+            "\t${5:// TODO: analyze this function}",
+            "\t$0",
+            "\treturn ${6:STATUS_SUCCESS};",
+            "}"
+        ],
+        "description": "Create a function skeleton for RE"
+    },
+    "Structure Definition": {
+        "prefix": "struct",
+        "body": [
+            "typedef struct _${1:STRUCTURE_NAME} {",
+            "\t${2:DWORD field1};",
+            "\t${3:PVOID field2};",
+            "\t$0",
+            "} ${1:STRUCTURE_NAME}, *P${1:STRUCTURE_NAME};"
+        ],
+        "description": "Create a structure definition"
+    },
+    "TODO Comment": {
+        "prefix": "todo",
+        "body": [
+            "// TODO: ${1:description}$0"
+        ],
+        "description": "Insert TODO comment"
+    },
+    "FIXME Comment": {
+        "prefix": "fixme",
+        "body": [
+            "// FIXME: ${1:description}$0"
+        ],
+        "description": "Insert FIXME comment"
+    },
+    "NOTE Comment": {
+        "prefix": "note",
+        "body": [
+            "// NOTE: ${1:description}$0"
+        ],
+        "description": "Insert NOTE comment"
+    },
+    "RESEARCH Comment": {
+        "prefix": "research",
+        "body": [
+            "// RESEARCH: ${1:description}$0"
+        ],
+        "description": "Insert RESEARCH comment"
+    },
+    "If Status Check": {
+        "prefix": "ifstatus",
+        "body": [
+            "if (!NT_SUCCESS(${1:status})) {",
+            "\t${2:// Handle error}",
+            "\treturn ${1:status};",
+            "}$0"
+        ],
+        "description": "NT status check pattern"
+    },
+    "Switch Case": {
+        "prefix": "switchcase",
+        "body": [
+            "switch (${1:variable}) {",
+            "\tcase ${2:value1}:",
+            "\t\t${3:// Handle case 1}",
+            "\t\tbreak;",
+            "\tcase ${4:value2}:",
+            "\t\t${5:// Handle case 2}",
+            "\t\tbreak;",
+            "\tdefault:",
+            "\t\t${6:// Handle default}",
+            "\t\tbreak;",
+            "}$0"
+        ],
+        "description": "Switch statement with cases"
+    },
+    "Memory Copy Pattern": {
+        "prefix": "memcpy",
+        "body": [
+            "memcpy(${1:dest}, ${2:src}, ${3:size});$0"
+        ],
+        "description": "Memory copy operation"
+    },
+    "Memory Compare Pattern": {
+        "prefix": "memcmp",
+        "body": [
+            "if (memcmp(${1:buf1}, ${2:buf2}, ${3:size}) == 0) {",
+            "\t$0",
+            "}"
+        ],
+        "description": "Memory comparison"
+    },
+    "Null Check": {
+        "prefix": "ifnull",
+        "body": [
+            "if (${1:pointer} == NULL) {",
+            "\t${2:return STATUS_INVALID_PARAMETER;}",
+            "}$0"
+        ],
+        "description": "NULL pointer check"
+    },
+    "UNICODE_STRING Declaration": {
+        "prefix": "unistr",
+        "body": [
+            "UNICODE_STRING ${1:ustrName};",
+            "RtlInitUnicodeString(&${1:ustrName}, L\"${2:string}\");$0"
+        ],
+        "description": "UNICODE_STRING initialization"
+    },
+    "Decompiled Loop": {
+        "prefix": "forloop",
+        "body": [
+            "for (${1:int i = 0}; ${2:i < count}; ${3:i++}) {",
+            "\t$0",
+            "}"
+        ],
+        "description": "Standard for loop"
+    },
+    "Obfuscated Call Pattern": {
+        "prefix": "obfcall",
+        "body": [
+            "// NOTE: Obfuscated/indirect call",
+            "${1:pFunction} = (${2:FARPROC})${3:resolve_function()};",
+            "${4:result} = ${1:pFunction}(${5:args});$0"
+        ],
+        "description": "Pattern for obfuscated function calls"
+    },
+    "API Hash Resolution": {
+        "prefix": "apihash",
+        "body": [
+            "// Hash: 0x${1:DEADBEEF}",
+            "${2:pFunction} = resolve_by_hash(0x${1:DEADBEEF});",
+            "if (${2:pFunction}) {",
+            "\t${3:// Call resolved function}",
+            "}$0"
+        ],
+        "description": "API resolution by hash"
+    },
+    "Virtual Memory Pattern": {
+        "prefix": "virtmem",
+        "body": [
+            "PVOID ${1:pAddress} = NULL;",
+            "SIZE_T ${2:size} = 0x${3:1000};",
+            "NTSTATUS status = ${4:NtAllocateVirtualMemory}(",
+            "\t${5:hProcess},",
+            "\t&${1:pAddress},",
+            "\t0,",
+            "\t&${2:size},",
+            "\t${6:MEM_COMMIT | MEM_RESERVE},",
+            "\t${7:PAGE_READWRITE}",
+            ");$0"
+        ],
+        "description": "Virtual memory allocation pattern"
+    }
+}

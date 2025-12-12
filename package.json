@@ -1,0 +1,53 @@
+{
+    "name": "cdoc-syntax",
+    "displayName": "CDoc Pseudocode Syntax",
+    "description": "C syntax highlighting for reverse engineering pseudocode without error analysis",
+    "version": "1.0.0",
+    "publisher": "ntpower",
+    "icon": "icon.png",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/ntpower/cdoc-syntax"
+    },
+    "engines": {
+        "vscode": "^1.74.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "keywords": [
+        "reverse engineering",
+        "pseudocode",
+        "c",
+        "syntax",
+        "malware analysis"
+    ],
+    "contributes": {
+        "languages": [
+            {
+                "id": "cdoc",
+                "aliases": [
+                    "CDoc",
+                    "cdoc"
+                ],
+                "extensions": [
+                    ".cdoc"
+                ],
+                "configuration": "./language-configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "cdoc",
+                "scopeName": "source.cdoc",
+                "path": "./syntaxes/cdoc.tmLanguage.json"
+            }
+        ],
+        "snippets": [
+            {
+                "language": "cdoc",
+                "path": "./snippets/cdoc.json"
+            }
+        ]
+    }
+}

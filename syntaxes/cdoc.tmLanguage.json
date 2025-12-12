@@ -1,0 +1,234 @@
+{
+    "scopeName": "source.cdoc",
+    "name": "CDoc",
+    "patterns": [
+        { "include": "#comments" },
+        { "include": "#preprocessor" },
+        { "include": "#strings" },
+        { "include": "#memory-addresses" },
+        { "include": "#disassembler-names" },
+        { "include": "#numbers" },
+        { "include": "#keywords" },
+        { "include": "#calling-conventions" },
+        { "include": "#types" },
+        { "include": "#operators" },
+        { "include": "#functions" }
+    ],
+    "repository": {
+        "comments": {
+            "patterns": [
+                {
+                    "name": "comment.line.double-slash.cdoc",
+                    "match": "(//)(.*)(TODO|FIXME|NOTE|HACK|XXX|BUG|RESEARCH)(:?)(.*)$",
+                    "captures": {
+                        "1": { "name": "comment.line.double-slash.cdoc" },
+                        "2": { "name": "comment.line.double-slash.cdoc" },
+                        "3": { "name": "keyword.other.comment-tag.cdoc" },
+                        "4": { "name": "comment.line.double-slash.cdoc" },
+                        "5": { "name": "comment.line.double-slash.cdoc" }
+                    }
+                },
+                {
+                    "name": "comment.line.double-slash.cdoc",
+                    "match": "//.*$"
+                },
+                {
+                    "name": "comment.block.cdoc",
+                    "begin": "/\\*",
+                    "end": "\\*/",
+                    "patterns": [
+                        {
+                            "name": "keyword.other.comment-tag.cdoc",
+                            "match": "\\b(TODO|FIXME|NOTE|HACK|XXX|BUG|RESEARCH)\\b"
+                        }
+                    ]
+                }
+            ]
+        },
+        "preprocessor": {
+            "patterns": [
+                {
+                    "name": "meta.preprocessor.cdoc",
+                    "match": "^\\s*#\\s*(include|define|undef|if|ifdef|ifndef|else|elif|endif|pragma|error|warning)\\b.*$",
+                    "captures": {
+                        "0": { "name": "keyword.control.directive.cdoc" }
+                    }
+                }
+            ]
+        },
+        "strings": {
+            "patterns": [
+                {
+                    "name": "string.quoted.double.cdoc",
+                    "begin": "\"",
+                    "end": "\"",
+                    "patterns": [
+                        {
+                            "name": "constant.character.escape.cdoc",
+                            "match": "\\\\."
+                        }
+                    ]
+                },
+                {
+                    "name": "string.quoted.single.cdoc",
+                    "begin": "'",
+                    "end": "'",
+                    "patterns": [
+                        {
+                            "name": "constant.character.escape.cdoc",
+                            "match": "\\\\."
+                        }
+                    ]
+                }
+            ]
+        },
+        "memory-addresses": {
+            "patterns": [
+                {
+                    "name": "constant.numeric.address.cdoc",
+                    "match": "\\b0[xX][0-9a-fA-F]{6,16}\\b"
+                }
+            ]
+        },
+        "disassembler-names": {
+            "patterns": [
+                {
+                    "name": "entity.name.function.disassembler.cdoc",
+                    "match": "\\b(sub|nullsub|j_)_[0-9a-fA-F]+\\b"
+                },
+                {
+                    "name": "entity.name.label.disassembler.cdoc",
+                    "match": "\\b(loc|locret)_[0-9a-fA-F]+\\b"
+                },
+                {
+                    "name": "variable.other.disassembler.cdoc",
+                    "match": "\\b(byte|word|dword|qword|xmmword|ymmword)_[0-9a-fA-F]+\\b"
+                },
+                {
+                    "name": "variable.other.disassembler.cdoc",
+                    "match": "\\b(unk|off|seg|stru)_[0-9a-fA-F]+\\b"
+                }
+            ]
+        },
+        "numbers": {
+            "patterns": [
+                {
+                    "name": "constant.numeric.hex.cdoc",
+                    "match": "\\b0[xX][0-9a-fA-F]+[uUlL]*\\b"
+                },
+                {
+                    "name": "constant.numeric.binary.cdoc",
+                    "match": "\\b0[bB][01]+[uUlL]*\\b"
+                },
+                {
+                    "name": "constant.numeric.octal.cdoc",
+                    "match": "\\b0[0-7]+[uUlL]*\\b"
+                },
+                {
+                    "name": "constant.numeric.decimal.cdoc",
+                    "match": "\\b[0-9]+(\\.[0-9]+)?([eE][+-]?[0-9]+)?[fFlLuU]*\\b"
+                }
+            ]
+        },
+        "calling-conventions": {
+            "patterns": [
+                {
+                    "name": "storage.modifier.calling-convention.cdoc",
+                    "match": "\\b(__cdecl|__stdcall|__fastcall|__thiscall|__vectorcall|__clrcall)\\b"
+                },
+                {
+                    "name": "storage.modifier.microsoft.cdoc",
+                    "match": "\\b(__declspec|__based|__inline|__forceinline|__noinline|__restrict|__unaligned|__w64)\\b"
+                },
+                {
+                    "name": "storage.modifier.winapi.cdoc",
+                    "match": "\\b(WINAPI|CALLBACK|APIENTRY|NTAPI|FASTCALL|STDCALL|CDECL)\\b"
+                }
+            ]
+        },
+        "keywords": {
+            "patterns": [
+                {
+                    "name": "keyword.control.cdoc",
+                    "match": "\\b(if|else|for|while|do|switch|case|default|break|continue|return|goto)\\b"
+                },
+                {
+                    "name": "storage.type.cdoc",
+                    "match": "\\b(typedef|struct|union|enum|sizeof|alignof|typeof)\\b"
+                },
+                {
+                    "name": "storage.modifier.cdoc",
+                    "match": "\\b(const|volatile|static|extern|inline|register|restrict|_Atomic|_Thread_local)\\b"
+                },
+                {
+                    "name": "constant.language.cdoc",
+                    "match": "\\b(NULL|nullptr|true|false|TRUE|FALSE)\\b"
+                },
+                {
+                    "name": "constant.language.status.cdoc",
+                    "match": "\\b(STATUS_SUCCESS|STATUS_UNSUCCESSFUL|STATUS_INVALID_PARAMETER|STATUS_ACCESS_DENIED|STATUS_BUFFER_TOO_SMALL|STATUS_INVALID_HANDLE|STATUS_NOT_IMPLEMENTED)\\b"
+                }
+            ]
+        },
+        "types": {
+            "patterns": [
+                {
+                    "name": "storage.type.builtin.cdoc",
+                    "match": "\\b(void|char|short|int|long|float|double|signed|unsigned|_Bool|_Complex|_Imaginary)\\b"
+                },
+                {
+                    "name": "storage.type.stdint.cdoc",
+                    "match": "\\b(int8_t|int16_t|int32_t|int64_t|uint8_t|uint16_t|uint32_t|uint64_t|size_t|ssize_t|ptrdiff_t|intptr_t|uintptr_t)\\b"
+                },
+                {
+                    "name": "storage.type.windows.basic.cdoc",
+                    "match": "\\b(BYTE|WORD|DWORD|QWORD|BOOL|BOOLEAN|HANDLE|PVOID|LPVOID|LPCVOID|LPSTR|LPCSTR|LPWSTR|LPCWSTR|PSTR|PCSTR|PWSTR|PCWSTR)\\b"
+                },
+                {
+                    "name": "storage.type.windows.handle.cdoc",
+                    "match": "\\b(HMODULE|HINSTANCE|HWND|HKEY|HDC|HBITMAP|HBRUSH|HPEN|HFONT|HICON|HCURSOR|HMENU|HACCEL)\\b"
+                },
+                {
+                    "name": "storage.type.windows.integer.cdoc",
+                    "match": "\\b(ULONG|UCHAR|USHORT|LONG|SHORT|CHAR|WCHAR|LONGLONG|ULONGLONG|INT|UINT|INT_PTR|UINT_PTR|LONG_PTR|ULONG_PTR|DWORD_PTR|SIZE_T|SSIZE_T)\\b"
+                },
+                {
+                    "name": "storage.type.windows.pointer.cdoc",
+                    "match": "\\b(PULONG|PUCHAR|PUSHORT|PLONG|PSHORT|PCHAR|PWCHAR|PLONGLONG|PULONGLONG|PINT|PUINT|PHANDLE|PBYTE|PWORD|PDWORD|PQWORD|PBOOL|PBOOLEAN)\\b"
+                },
+                {
+                    "name": "storage.type.nt.cdoc",
+                    "match": "\\b(NTSTATUS|UNICODE_STRING|ANSI_STRING|PUNICODE_STRING|PANSI_STRING|OBJECT_ATTRIBUTES|POBJECT_ATTRIBUTES|IO_STATUS_BLOCK|PIO_STATUS_BLOCK|LARGE_INTEGER|PLARGE_INTEGER|ULARGE_INTEGER|PULARGE_INTEGER)\\b"
+                },
+                {
+                    "name": "storage.type.nt.kernel.cdoc",
+                    "match": "\\b(PEPROCESS|PETHREAD|PDRIVER_OBJECT|PDEVICE_OBJECT|PIRP|PMDL|PKTHREAD|PKPROCESS|KPROCESSOR_MODE|KIRQL|KAFFINITY|CLIENT_ID|PCLIENT_ID)\\b"
+                },
+                {
+                    "name": "storage.type.nt.security.cdoc",
+                    "match": "\\b(ACCESS_MASK|PACCESS_MASK|SECURITY_DESCRIPTOR|PSECURITY_DESCRIPTOR|ACL|PACL|SID|PSID|TOKEN_PRIVILEGES|PTOKEN_PRIVILEGES|LUID|PLUID)\\b"
+                },
+                {
+                    "name": "storage.type.nt.list.cdoc",
+                    "match": "\\b(LIST_ENTRY|PLIST_ENTRY|SINGLE_LIST_ENTRY|PSINGLE_LIST_ENTRY|RTL_BALANCED_NODE|PRTL_BALANCED_NODE)\\b"
+                }
+            ]
+        },
+        "operators": {
+            "patterns": [
+                {
+                    "name": "keyword.operator.cdoc",
+                    "match": "(->|\\.|\\+\\+|--|&&|\\|\\||<<|>>|<=|>=|==|!=|[+\\-*/%&|^~!<>=])"
+                }
+            ]
+        },
+        "functions": {
+            "patterns": [
+                {
+                    "name": "entity.name.function.cdoc",
+                    "match": "\\b([a-zA-Z_][a-zA-Z0-9_]*)\\s*(?=\\()"
+                }
+            ]
+        }
+    }
+}

@@ -1,0 +1,218 @@
+// example.cdoc - Showcasing CDoc syntax highlighting features
+// This demonstrates all the special highlighting for reverse engineering
+
+#include <windows.h>
+#define MAX_BUFFER_SIZE 0x1000
+
+// TODO: Analyze this process injection function
+// FIXME: Check if ASLR affects these addresses
+// NOTE: This appears to be a classic process hollowing technique
+
+typedef struct _INJECTION_CONTEXT {
+    HANDLE hProcess;              // Target process handle
+    HANDLE hThread;               // Remote thread handle
+    PVOID pRemoteBuffer;          // Remote memory address: 0x140001000
+    SIZE_T bufferSize;            // Allocation size
+    BOOLEAN isInjected;           // Injection status
+    UNICODE_STRING targetPath;    // Target executable path
+    PEPROCESS pProcess;           // Kernel process object
+} INJECTION_CONTEXT, *PINJECTION_CONTEXT;
+
+// Example with calling conventions and Windows API types
+NTSTATUS __fastcall sub_140001000(
+    HANDLE hProcess, 
+    PVOID lpBaseAddress,
+    SIZE_T dwSize
+) {
+    NTSTATUS status = STATUS_SUCCESS;
+    DWORD dwProtection = PAGE_EXECUTE_READWRITE;
+    ULONG_PTR oldProtect = 0;
+    
+    // Validate parameters
+    if (hProcess == NULL || lpBaseAddress == NULL) {
+        return STATUS_INVALID_PARAMETER;
+    }
+    
+    // RESEARCH: Why does malware use this specific address?
+    PVOID targetAddress = (PVOID)0x140002000;
+    
+    // Allocate memory in target process
+    status = NtAllocateVirtualMemory(
+        hProcess,
+        &targetAddress,
+        0,
+        &dwSize,
+        MEM_COMMIT | MEM_RESERVE,
+        dwProtection
+    );
+    
+    if (!NT_SUCCESS(status)) {
+        // HACK: Fallback to alternative allocation method
+        return status;
+    }
+    
+    return STATUS_SUCCESS;
+}
+
+// IDA/Ghidra style function names are highlighted
+PVOID __stdcall sub_140003420(DWORD dwProcessId) {
+    OBJECT_ATTRIBUTES objAttr;
+    CLIENT_ID clientId;
+    HANDLE hProcess = NULL;
+    
+    // Initialize structures
+    clientId.UniqueProcess = (HANDLE)(ULONG_PTR)dwProcessId;
+    clientId.UniqueThread = NULL;
+    
+    InitializeObjectAttributes(
+        &objAttr,
+        NULL,
+        0,
+        NULL,
+        NULL
+    );
+    
+    // Open target process
+    NTSTATUS status = NtOpenProcess(
+        &hProcess,
+        PROCESS_ALL_ACCESS,
+        &objAttr,
+        &clientId
+    );
+    
+    // Jump to other functions
+    if (NT_SUCCESS(status)) {
+        return loc_140003500(hProcess);
+    }
+    
+    return NULL;
+}
+
+// Disassembler-generated labels and data references
+PVOID __cdecl loc_140003500(HANDLE hProcess) {
+    // NOTE: This looks like shellcode injection
+    PBYTE pShellcode = (PBYTE)dword_140005000;  // Data reference
+    SIZE_T shellcodeSize = qword_140005008;     // Size from data section
+    
+    // Copy from static buffer
+    BYTE localBuffer[256];
+    memcpy(localBuffer, byte_140006000, 256);
+    
+    // Write to remote process
+    return (PVOID)sub_140003600(hProcess, pShellcode, shellcodeSize);
+}
+
+// NT kernel structures example
+NTSTATUS __stdcall nullsub_1(PDRIVER_OBJECT pDriverObject) {
+    PDEVICE_OBJECT pDeviceObject = NULL;
+    UNICODE_STRING deviceName;
+    UNICODE_STRING symbolicLink;
+    
+    RtlInitUnicodeString(&deviceName, L"\\Device\\MyDriver");
+    RtlInitUnicodeString(&symbolicLink, L"\\??\\MyDriver");
+    
+    // Create device object
+    NTSTATUS status = IoCreateDevice(
+        pDriverObject,
+        sizeof(DEVICE_EXTENSION),
+        &deviceName,
+        FILE_DEVICE_UNKNOWN,
+        0,
+        FALSE,
+        &pDeviceObject
+    );
+    
+    if (!NT_SUCCESS(status)) {
+        return status;
+    }
+    
+    // Create symbolic link
+    status = IoCreateSymbolicLink(&symbolicLink, &deviceName);
+    
+    return status;
+}
+
+// API resolution by hash (common in malware)
+FARPROC WINAPI resolve_api_by_hash(HMODULE hModule, DWORD dwHash) {
+    // BUG: Hash collision possible with weak algorithm
+    PIMAGE_DOS_HEADER pDosHeader = (PIMAGE_DOS_HEADER)hModule;
+    PIMAGE_NT_HEADERS pNtHeaders = (PIMAGE_NT_HEADERS)((PBYTE)hModule + pDosHeader->e_lfanew);
+    
+    // Walk export table at offset 0x140008000
+    PIMAGE_EXPORT_DIRECTORY pExports = (PIMAGE_EXPORT_DIRECTORY)(
+        (PBYTE)hModule + 
+        pNtHeaders->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress
+    );
+    
+    PDWORD pFunctions = (PDWORD)((PBYTE)hModule + pExports->AddressOfFunctions);
+    PDWORD pNames = (PDWORD)((PBYTE)hModule + pExports->AddressOfNames);
+    PWORD pOrdinals = (PWORD)((PBYTE)hModule + pExports->AddressOfNameOrdinals);
+    
+    // Hash comparison loop
+    for (DWORD i = 0; i < pExports->NumberOfNames; i++) {
+        PCSTR pName = (PCSTR)((PBYTE)hModule + pNames[i]);
+        DWORD hash = calculate_hash(pName);
+        
+        if (hash == dwHash) {
+            WORD ordinal = pOrdinals[i];
+            DWORD rva = pFunctions[ordinal];
+            return (FARPROC)((PBYTE)hModule + rva);
+        }
+    }
+    
+    return NULL;
+}
+
+// Obfuscated control flow
+BOOLEAN __thiscall unk_140009000(PVOID pContext) {
+    // XXX: Heavily obfuscated, needs more analysis
+    ULONG controlFlag = *(PULONG)((PBYTE)pContext + 0x10);
+    
+    switch (controlFlag) {
+        case 0x1:
+            return sub_140009100(pContext);
+        case 0x2:
+            return j_sub_140009200(pContext);  // Jumped-to function
+        case 0x3:
+            goto loc_140009300;
+        default:
+            return FALSE;
+    }
+    
+loc_140009300:
+    // RESEARCH: What does this path do?
+    return locret_140009400();
+}
+
+// Security descriptor manipulation
+NTSTATUS NTAPI off_14000A000(HANDLE hObject, SECURITY_INFORMATION secInfo) {
+    PSECURITY_DESCRIPTOR pSecDesc = NULL;
+    ULONG requiredSize = 0;
+    PACL pDacl = NULL;
+    PACL pSacl = NULL;
+    PSID pOwner = NULL;
+    PSID pGroup = NULL;
+    
+    // Query security descriptor size
+    NTSTATUS status = NtQuerySecurityObject(
+        hObject,
+        secInfo,
+        NULL,
+        0,
+        &requiredSize
+    );
+    
+    if (status != STATUS_BUFFER_TOO_SMALL) {
+        return status;
+    }
+    
+    // Allocate and query again
+    pSecDesc = (PSECURITY_DESCRIPTOR)ExAllocatePool(PagedPool, requiredSize);
+    if (!pSecDesc) {
+        return STATUS_INSUFFICIENT_RESOURCES;
+    }
+    
+    status = NtQuerySecurityObject(hObject, secInfo, pSecDesc, requiredSize, &requiredSize);
+    
+    return status;
+}
